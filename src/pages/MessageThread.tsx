@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ChevronLeft, Send } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { messageBodySchema } from "@/lib/validations";
 
 const sampleMessages = [
   {
@@ -40,8 +42,10 @@ const sampleMessages = [
 
 const MessageThread = () => {
   const { threadId } = useParams();
+  const { isAdmin } = useAuth();
   const [newMessage, setNewMessage] = useState("");
   const [messages, setMessages] = useState(sampleMessages);
+  const [error, setError] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   
   const otherUser = "bewust_mens";
@@ -55,7 +59,14 @@ const MessageThread = () => {
   }, [messages]);
 
   const handleSend = () => {
-    if (!newMessage.trim()) return;
+    setError("");
+    
+    // Validate message
+    const result = messageBodySchema.safeParse(newMessage);
+    if (!result.success) {
+      setError(result.error.errors[0]?.message || "Ongeldig bericht");
+      return;
+    }
     
     const now = new Date();
     const timestamp = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
@@ -80,7 +91,7 @@ const MessageThread = () => {
   };
 
   return (
-    <Layout isLoggedIn={true} showFooter={false}>
+    <Layout isLoggedIn={true} isAdmin={isAdmin} showFooter={false}>
       <div className="flex h-[calc(100vh-4rem)] flex-col">
         {/* Header */}
         <div className="border-b border-border/50 bg-card px-4 py-3">
@@ -151,11 +162,15 @@ const MessageThread = () => {
                 onChange={(e) => setNewMessage(e.target.value)}
                 onKeyPress={handleKeyPress}
                 className="flex-1"
+                maxLength={5000}
               />
               <Button onClick={handleSend} disabled={!newMessage.trim()}>
                 <Send className="h-4 w-4" />
               </Button>
             </div>
+            {error && (
+              <p className="mt-2 text-sm text-destructive">{error}</p>
+            )}
           </div>
         </div>
       </div>

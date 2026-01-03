@@ -1,31 +1,69 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Heart, Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
+import { loginFormSchema } from "@/lib/validations";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const { toast } = useToast();
+  const { signIn, user } = useAuth();
+  const navigate = useNavigate();
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      navigate("/community");
+    }
+  }, [user, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrors({});
+    
+    // Validate with zod
+    const result = loginFormSchema.safeParse({ email, password });
+    if (!result.success) {
+      const fieldErrors: Record<string, string> = {};
+      result.error.errors.forEach((err) => {
+        if (err.path[0]) {
+          fieldErrors[err.path[0] as string] = err.message;
+        }
+      });
+      setErrors(fieldErrors);
+      return;
+    }
+
     setIsLoading(true);
     
-    // TODO: Implement actual login with Supabase
-    setTimeout(() => {
+    const { error } = await signIn(email, password);
+    
+    if (error) {
       toast({
-        title: "Login functionaliteit",
-        description: "De backend wordt binnenkort gekoppeld.",
+        title: "Inloggen mislukt",
+        description: error.message === "Invalid login credentials" 
+          ? "Onjuist e-mailadres of wachtwoord" 
+          : error.message,
+        variant: "destructive",
       });
-      setIsLoading(false);
-    }, 1000);
+    } else {
+      toast({
+        title: "Welkom terug!",
+        description: "Je bent succesvol ingelogd.",
+      });
+      navigate("/community");
+    }
+    
+    setIsLoading(false);
   };
 
   return (
@@ -66,6 +104,9 @@ const Login = () => {
                       required
                     />
                   </div>
+                  {errors.email && (
+                    <p className="text-sm text-destructive">{errors.email}</p>
+                  )}
                 </div>
 
                 <div className="space-y-2">
@@ -89,6 +130,9 @@ const Login = () => {
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
                   </div>
+                  {errors.password && (
+                    <p className="text-sm text-destructive">{errors.password}</p>
+                  )}
                 </div>
 
                 <Button type="submit" className="w-full" size="lg" disabled={isLoading}>

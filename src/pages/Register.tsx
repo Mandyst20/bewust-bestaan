@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,6 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Heart, Mail, Lock, User, Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
+import { registerFormSchema } from "@/lib/validations";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -16,39 +18,64 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [acceptedGuidelines, setAcceptedGuidelines] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const { toast } = useToast();
+  const { signUp, user } = useAuth();
+  const navigate = useNavigate();
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      navigate("/community");
+    }
+  }, [user, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrors({});
     
-    if (password !== confirmPassword) {
-      toast({
-        title: "Wachtwoorden komen niet overeen",
-        description: "Controleer je wachtwoorden en probeer opnieuw.",
-        variant: "destructive",
+    // Validate with zod
+    const result = registerFormSchema.safeParse({
+      username,
+      email,
+      password,
+      confirmPassword,
+      acceptedGuidelines,
+    });
+    
+    if (!result.success) {
+      const fieldErrors: Record<string, string> = {};
+      result.error.errors.forEach((err) => {
+        if (err.path[0]) {
+          fieldErrors[err.path[0] as string] = err.message;
+        }
       });
-      return;
-    }
-
-    if (!acceptedGuidelines) {
-      toast({
-        title: "Richtlijnen niet geaccepteerd",
-        description: "Je moet akkoord gaan met de communityrichtlijnen.",
-        variant: "destructive",
-      });
+      setErrors(fieldErrors);
       return;
     }
 
     setIsLoading(true);
     
-    // TODO: Implement actual registration with Supabase
-    setTimeout(() => {
+    const { error } = await signUp(email, password, username);
+
+    if (error) {
+      const message = error.message.includes("already registered")
+        ? "Dit e-mailadres is al in gebruik"
+        : error.message;
       toast({
-        title: "Registratie functionaliteit",
-        description: "De backend wordt binnenkort gekoppeld.",
+        title: "Registratie mislukt",
+        description: message,
+        variant: "destructive",
       });
-      setIsLoading(false);
-    }, 1000);
+    } else {
+      toast({
+        title: "Account aangemaakt!",
+        description: "Je kunt nu inloggen.",
+      });
+      navigate("/community");
+    }
+    
+    setIsLoading(false);
   };
 
   return (
@@ -105,6 +132,9 @@ const Register = () => {
                       required
                     />
                   </div>
+                  {errors.username && (
+                    <p className="text-sm text-destructive">{errors.username}</p>
+                  )}
                 </div>
 
                 <div className="space-y-2">
@@ -121,6 +151,9 @@ const Register = () => {
                       required
                     />
                   </div>
+                  {errors.email && (
+                    <p className="text-sm text-destructive">{errors.email}</p>
+                  )}
                 </div>
 
                 <div className="space-y-2">
@@ -134,7 +167,6 @@ const Register = () => {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       className="pl-10 pr-10"
-                      minLength={8}
                       required
                     />
                     <button
@@ -145,6 +177,9 @@ const Register = () => {
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
                   </div>
+                  {errors.password && (
+                    <p className="text-sm text-destructive">{errors.password}</p>
+                  )}
                 </div>
 
                 <div className="space-y-2">
@@ -161,6 +196,9 @@ const Register = () => {
                       required
                     />
                   </div>
+                  {errors.confirmPassword && (
+                    <p className="text-sm text-destructive">{errors.confirmPassword}</p>
+                  )}
                 </div>
 
                 <div className="flex items-start gap-3 rounded-xl bg-muted/50 p-4">
@@ -178,6 +216,9 @@ const Register = () => {
                     . Ik begrijp dat dit een veilige plek is voor iedereen.
                   </Label>
                 </div>
+                {errors.acceptedGuidelines && (
+                  <p className="text-sm text-destructive">{errors.acceptedGuidelines}</p>
+                )}
 
                 <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
                   {isLoading ? "Account aanmaken..." : "Account aanmaken"}

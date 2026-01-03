@@ -3,11 +3,14 @@ import { PageHeader, SectionHeader } from "@/components/PageHeader";
 import { ContentCard } from "@/components/Cards";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Users, MessageSquare, AlertTriangle, Search, Lock, Trash2 } from "lucide-react";
+import { Users, MessageSquare, AlertTriangle, Search } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 const Admin = () => {
+  const { isAdmin } = useAuth();
+
   return (
-    <Layout isLoggedIn={true} isAdmin={true}>
+    <Layout isLoggedIn={true} isAdmin={isAdmin}>
       <div className="container py-8 md:py-12">
         <PageHeader
           title="Admin Dashboard"
