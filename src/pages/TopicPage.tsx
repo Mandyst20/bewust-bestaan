@@ -5,6 +5,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { ChevronLeft, MessageCircle, Lock } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
+import { replyBodySchema } from "@/lib/validations";
 
 const sampleTopic = {
   id: 1,
@@ -56,10 +58,20 @@ const TopicPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { isAdmin } = useAuth();
   const [replyText, setReplyText] = useState("");
+  const [replyError, setReplyError] = useState("");
 
   const handleReply = () => {
-    if (!replyText.trim()) return;
+    setReplyError("");
+    
+    // Validate reply
+    const result = replyBodySchema.safeParse(replyText);
+    if (!result.success) {
+      setReplyError(result.error.errors[0]?.message || "Ongeldige invoer");
+      return;
+    }
+
     toast({
       title: "Reactie geplaatst",
       description: "Je reactie is toegevoegd aan dit topic.",
@@ -79,7 +91,7 @@ const TopicPage = () => {
   };
 
   return (
-    <Layout isLoggedIn={true}>
+    <Layout isLoggedIn={true} isAdmin={isAdmin}>
       <div className="container max-w-4xl py-8 md:py-12">
         <Link
           to={`/community/category/${sampleTopic.categorySlug}`}
@@ -203,8 +215,13 @@ const TopicPage = () => {
               onChange={(e) => setReplyText(e.target.value)}
               placeholder="Schrijf hier je reactie..."
               className="mt-4 min-h-32"
+              maxLength={5000}
             />
-            <div className="mt-4 flex justify-end">
+            {replyError && (
+              <p className="mt-2 text-sm text-destructive">{replyError}</p>
+            )}
+            <div className="mt-2 flex items-center justify-between">
+              <span className="text-xs text-muted-foreground">{replyText.length}/5000 karakters</span>
               <Button onClick={handleReply} disabled={!replyText.trim()}>
                 Reactie plaatsen
               </Button>
