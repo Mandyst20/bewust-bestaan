@@ -40,7 +40,7 @@ const Community = () => {
   const navigate = useNavigate();
 
   return (
-    <Layout isLoggedIn={true}>
+    <Layout>
       <div className="container py-8 md:py-12">
         <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
           <PageHeader

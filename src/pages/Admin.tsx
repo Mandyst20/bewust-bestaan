@@ -7,10 +7,8 @@ import { Users, MessageSquare, AlertTriangle, Search } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
 const Admin = () => {
-  const { isAdmin } = useAuth();
-
   return (
-    <Layout isLoggedIn={true} isAdmin={isAdmin}>
+    <Layout>
       <div className="container py-8 md:py-12">
         <PageHeader
           title="Admin Dashboard"

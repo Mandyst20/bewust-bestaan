@@ -38,7 +38,7 @@ const Exercises = () => {
   const navigate = useNavigate();
 
   return (
-    <Layout isLoggedIn={true}>
+    <Layout>
       <div className="container py-8 md:py-12">
         <PageHeader
           title="Oefeningen"
