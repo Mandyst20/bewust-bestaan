@@ -54,7 +54,7 @@ const BlogDetail = () => {
   const { slug } = useParams();
 
   return (
-    <Layout isLoggedIn={true}>
+    <Layout>
       <article className="py-8 md:py-12">
         <div className="container max-w-3xl">
           <Link

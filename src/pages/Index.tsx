@@ -5,7 +5,7 @@ import { Heart, Users, BookOpen, Shield, Sparkles } from "lucide-react";
 
 const Index = () => {
   return (
-    <Layout isLoggedIn={false}>
+    <Layout>
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-hero py-20 md:py-32">
         <div className="container relative z-10">

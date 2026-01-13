@@ -60,7 +60,7 @@ const CategoryPage = () => {
   const category = categoryData[slug || ""] || { name: "Categorie", description: "" };
 
   return (
-    <Layout isLoggedIn={true}>
+    <Layout>
       <div className="container py-8 md:py-12">
         <Link
           to="/community"

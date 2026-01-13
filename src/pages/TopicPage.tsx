@@ -5,7 +5,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { ChevronLeft, MessageCircle, Lock } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { useAuth } from "@/hooks/useAuth";
 import { replyBodySchema } from "@/lib/validations";
 
 const sampleTopic = {
@@ -58,7 +57,6 @@ const TopicPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { isAdmin } = useAuth();
   const [replyText, setReplyText] = useState("");
   const [replyError, setReplyError] = useState("");
 
@@ -91,7 +89,7 @@ const TopicPage = () => {
   };
 
   return (
-    <Layout isLoggedIn={true} isAdmin={isAdmin}>
+    <Layout>
       <div className="container max-w-4xl py-8 md:py-12">
         <Link
           to={`/community/category/${sampleTopic.categorySlug}`}

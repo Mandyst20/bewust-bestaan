@@ -30,7 +30,7 @@ const UserProfile = () => {
   };
 
   return (
-    <Layout isLoggedIn={true}>
+    <Layout>
       <div className="container max-w-2xl py-8 md:py-12">
         <Link
           to="/community"

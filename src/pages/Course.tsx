@@ -7,7 +7,7 @@ const Course = () => {
   const hasAccess = false; // TODO: Check entitlements
 
   return (
-    <Layout isLoggedIn={true}>
+    <Layout>
       <div className="container py-8 md:py-12">
         {hasAccess ? (
           // Course content for paid users

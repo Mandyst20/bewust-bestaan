@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ChevronLeft, Send } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
-import { useAuth } from "@/hooks/useAuth";
 import { messageBodySchema } from "@/lib/validations";
 
 const sampleMessages = [
@@ -42,7 +41,6 @@ const sampleMessages = [
 
 const MessageThread = () => {
   const { threadId } = useParams();
-  const { isAdmin } = useAuth();
   const [newMessage, setNewMessage] = useState("");
   const [messages, setMessages] = useState(sampleMessages);
   const [error, setError] = useState("");
@@ -91,7 +89,7 @@ const MessageThread = () => {
   };
 
   return (
-    <Layout isLoggedIn={true} isAdmin={isAdmin} showFooter={false}>
+    <Layout showFooter={false}>
       <div className="flex h-[calc(100vh-4rem)] flex-col">
         {/* Header */}
         <div className="border-b border-border/50 bg-card px-4 py-3">

@@ -3,7 +3,7 @@ import { PageHeader } from "@/components/PageHeader";
 
 const Guidelines = () => {
   return (
-    <Layout isLoggedIn={false}>
+    <Layout>
       <div className="container max-w-3xl py-8 md:py-12">
         <PageHeader
           title="Communityrichtlijnen"

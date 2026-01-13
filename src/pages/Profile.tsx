@@ -14,7 +14,7 @@ import { profileUpdateSchema } from "@/lib/validations";
 
 const Profile = () => {
   const { toast } = useToast();
-  const { user, isAdmin } = useAuth();
+  const { user } = useAuth();
   const [username, setUsername] = useState("");
   const [bio, setBio] = useState("");
   const [allowDm, setAllowDm] = useState(true);
@@ -90,7 +90,7 @@ const Profile = () => {
   };
 
   return (
-    <Layout isLoggedIn={true} isAdmin={isAdmin}>
+    <Layout>
       <div className="container max-w-2xl py-8 md:py-12">
         <PageHeader
           title="Mijn Profiel"

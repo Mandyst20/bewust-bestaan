@@ -39,7 +39,7 @@ const Messages = () => {
   );
 
   return (
-    <Layout isLoggedIn={true}>
+    <Layout>
       <div className="container max-w-3xl py-8 md:py-12">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
           <PageHeader
