@@ -2,41 +2,34 @@ import { Link, useNavigate } from "react-router-dom";
 import { Layout } from "@/components/Layout";
 import { PageHeader } from "@/components/PageHeader";
 import { Button } from "@/components/ui/button";
-import { Plus, Search } from "lucide-react";
+import { Plus, Search, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-
-const sampleThreads = [
-  {
-    id: "thread-1",
-    otherUser: "bewust_mens",
-    lastMessage: "Dankjewel voor je steun, het betekent veel voor me.",
-    timestamp: "2 min geleden",
-    unread: true,
-  },
-  {
-    id: "thread-2",
-    otherUser: "groeiend_hart",
-    lastMessage: "Heb je die ademhalingsoefening al geprobeerd?",
-    timestamp: "1 uur geleden",
-    unread: false,
-  },
-  {
-    id: "thread-3",
-    otherUser: "stille_kracht",
-    lastMessage: "Ik begrijp precies wat je bedoelt. Het is niet makkelijk.",
-    timestamp: "Gisteren",
-    unread: false,
-  },
-];
+import { useThreads, useLastMessages } from "@/hooks/useMessages";
+import { useAuth } from "@/hooks/useAuth";
+import { formatRelativeTime } from "@/lib/dateUtils";
 
 const Messages = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
+  
+  const { data: threads, isLoading: threadsLoading } = useThreads();
+  const threadIds = threads?.map((t) => t.id) || [];
+  const { data: lastMessages } = useLastMessages(threadIds);
 
-  const filteredThreads = sampleThreads.filter((thread) =>
-    thread.otherUser.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const getOtherUser = (thread: any) => {
+    if (!user) return null;
+    if (thread.user_a === user.id) {
+      return thread.user_b_profile;
+    }
+    return thread.user_a_profile;
+  };
+
+  const filteredThreads = threads?.filter((thread) => {
+    const otherUser = getOtherUser(thread);
+    return otherUser?.username?.toLowerCase().includes(searchQuery.toLowerCase());
+  }) || [];
 
   return (
     <Layout>
@@ -46,7 +39,7 @@ const Messages = () => {
             title="Berichten"
             description="Jouw privégesprekken"
           />
-          <Button onClick={() => navigate("/messages/new")} className="shrink-0">
+          <Button onClick={() => navigate("/community")} className="shrink-0">
             <Plus className="mr-2 h-4 w-4" />
             Nieuw gesprek
           </Button>
@@ -65,39 +58,52 @@ const Messages = () => {
 
         {/* Thread List */}
         <div className="mt-6 space-y-2">
-          {filteredThreads.length > 0 ? (
-            filteredThreads.map((thread) => (
-              <Link
-                key={thread.id}
-                to={`/messages/${thread.id}`}
-                className="flex items-center gap-4 rounded-xl border border-border/50 bg-card p-4 shadow-soft transition-smooth hover:border-primary/30 hover:shadow-medium"
-              >
-                <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-lg font-medium text-primary">
-                  {thread.otherUser.charAt(0).toUpperCase()}
-                  {thread.unread && (
-                    <span className="absolute -right-0.5 -top-0.5 h-3 w-3 rounded-full border-2 border-card bg-primary" />
-                  )}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between gap-2">
-                    <p className={`font-medium ${thread.unread ? 'text-foreground' : 'text-foreground'}`}>
-                      {thread.otherUser}
-                    </p>
-                    <span className="shrink-0 text-xs text-muted-foreground">
-                      {thread.timestamp}
-                    </span>
+          {threadsLoading ? (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            </div>
+          ) : filteredThreads.length > 0 ? (
+            filteredThreads.map((thread) => {
+              const otherUser = getOtherUser(thread);
+              const lastMessage = lastMessages?.[thread.id];
+              
+              return (
+                <Link
+                  key={thread.id}
+                  to={`/messages/${thread.id}`}
+                  className="flex items-center gap-4 rounded-xl border border-border/50 bg-card p-4 shadow-soft transition-smooth hover:border-primary/30 hover:shadow-medium"
+                >
+                  <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-lg font-medium text-primary">
+                    {otherUser?.avatar_url ? (
+                      <img src={otherUser.avatar_url} alt="" className="h-full w-full rounded-full object-cover" />
+                    ) : (
+                      otherUser?.username?.charAt(0).toUpperCase() || "?"
+                    )}
                   </div>
-                  <p className={`mt-0.5 truncate text-sm ${thread.unread ? 'text-foreground font-medium' : 'text-muted-foreground'}`}>
-                    {thread.lastMessage}
-                  </p>
-                </div>
-              </Link>
-            ))
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="font-medium text-foreground">
+                        {otherUser?.username || "Onbekend"}
+                      </p>
+                      <span className="shrink-0 text-xs text-muted-foreground">
+                        {formatRelativeTime(lastMessage?.created_at || thread.last_message_at)}
+                      </span>
+                    </div>
+                    <p className="mt-0.5 truncate text-sm text-muted-foreground">
+                      {lastMessage?.body || "Start het gesprek..."}
+                    </p>
+                  </div>
+                </Link>
+              );
+            })
           ) : (
             <div className="rounded-xl border border-border/50 bg-card p-8 text-center shadow-soft">
               <p className="text-muted-foreground">
-                Geen gesprekken gevonden
+                {searchQuery ? "Geen gesprekken gevonden" : "Nog geen privégesprekken. Start een chat vanuit een topic in de community!"}
               </p>
+              <Button onClick={() => navigate("/community")} className="mt-4" variant="outline">
+                Naar community
+              </Button>
             </div>
           )}
         </div>

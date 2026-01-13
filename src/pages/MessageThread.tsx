@@ -2,51 +2,23 @@ import { useParams, Link } from "react-router-dom";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ChevronLeft, Send } from "lucide-react";
+import { ChevronLeft, Send, Loader2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { messageBodySchema } from "@/lib/validations";
-
-const sampleMessages = [
-  {
-    id: 1,
-    senderId: "other",
-    body: "Hoi! Ik zag je reactie in het topic over gedachten. Wat je schreef raakte me.",
-    timestamp: "14:30",
-  },
-  {
-    id: 2,
-    senderId: "me",
-    body: "Dankjewel dat je me bereikt. Het voelde goed om het eindelijk eens te delen.",
-    timestamp: "14:32",
-  },
-  {
-    id: 3,
-    senderId: "other",
-    body: "Ik herken het helemaal. Soms helpt het al om te weten dat je niet de enige bent die zo voelt.",
-    timestamp: "14:33",
-  },
-  {
-    id: 4,
-    senderId: "me",
-    body: "Precies. Het is fijn om hier mensen te vinden die het begrijpen.",
-    timestamp: "14:35",
-  },
-  {
-    id: 5,
-    senderId: "other",
-    body: "Dankjewel voor je steun, het betekent veel voor me.",
-    timestamp: "14:38",
-  },
-];
+import { useThread, useThreadMessages, useSendMessage } from "@/hooks/useMessages";
+import { useAuth } from "@/hooks/useAuth";
+import { formatMessageTime } from "@/lib/dateUtils";
 
 const MessageThread = () => {
   const { threadId } = useParams();
+  const { user } = useAuth();
   const [newMessage, setNewMessage] = useState("");
-  const [messages, setMessages] = useState(sampleMessages);
   const [error, setError] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   
-  const otherUser = "bewust_mens";
+  const { data: thread, isLoading: threadLoading } = useThread(threadId);
+  const { data: messages, isLoading: messagesLoading } = useThreadMessages(threadId);
+  const sendMessage = useSendMessage();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -56,29 +28,24 @@ const MessageThread = () => {
     scrollToBottom();
   }, [messages]);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     setError("");
     
-    // Validate message
     const result = messageBodySchema.safeParse(newMessage);
     if (!result.success) {
       setError(result.error.errors[0]?.message || "Ongeldig bericht");
       return;
     }
     
-    const now = new Date();
-    const timestamp = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-    
-    setMessages([
-      ...messages,
-      {
-        id: messages.length + 1,
-        senderId: "me",
+    try {
+      await sendMessage.mutateAsync({
+        threadId: threadId!,
         body: newMessage,
-        timestamp,
-      },
-    ]);
-    setNewMessage("");
+      });
+      setNewMessage("");
+    } catch (err: any) {
+      setError(err.message || "Kon bericht niet versturen");
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -87,6 +54,37 @@ const MessageThread = () => {
       handleSend();
     }
   };
+
+  if (threadLoading) {
+    return (
+      <Layout showFooter={false}>
+        <div className="flex h-[calc(100vh-4rem)] items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </Layout>
+    );
+  }
+
+  if (!thread) {
+    return (
+      <Layout showFooter={false}>
+        <div className="container py-8">
+          <Link
+            to="/messages"
+            className="mb-6 inline-flex items-center gap-1 text-sm text-muted-foreground transition-smooth hover:text-foreground"
+          >
+            <ChevronLeft className="h-4 w-4" />
+            Terug naar berichten
+          </Link>
+          <div className="rounded-xl border border-border/50 bg-card p-8 text-center shadow-soft">
+            <p className="text-muted-foreground">Gesprek niet gevonden</p>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
+
+  const otherUser = thread.otherUser;
 
   return (
     <Layout showFooter={false}>
@@ -103,16 +101,19 @@ const MessageThread = () => {
             </Link>
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-sm font-medium text-primary">
-                {otherUser.charAt(0).toUpperCase()}
+                {otherUser?.avatar_url ? (
+                  <img src={otherUser.avatar_url} alt="" className="h-full w-full rounded-full object-cover" />
+                ) : (
+                  otherUser?.username?.charAt(0).toUpperCase() || "?"
+                )}
               </div>
               <div>
                 <Link
-                  to={`/u/${otherUser}`}
+                  to={`/u/${otherUser?.username}`}
                   className="font-medium text-foreground hover:underline"
                 >
-                  {otherUser}
+                  {otherUser?.username || "Onbekend"}
                 </Link>
-                <p className="text-xs text-muted-foreground">Online</p>
               </div>
             </div>
           </div>
@@ -121,31 +122,41 @@ const MessageThread = () => {
         {/* Messages */}
         <div className="flex-1 overflow-y-auto p-4">
           <div className="container max-w-3xl space-y-4">
-            {messages.map((message) => (
-              <div
-                key={message.id}
-                className={`flex ${message.senderId === "me" ? "justify-end" : "justify-start"}`}
-              >
+            {messagesLoading ? (
+              <div className="flex items-center justify-center py-12">
+                <Loader2 className="h-6 w-6 animate-spin text-primary" />
+              </div>
+            ) : messages && messages.length > 0 ? (
+              messages.map((message) => (
                 <div
-                  className={`max-w-[75%] rounded-2xl px-4 py-3 ${
-                    message.senderId === "me"
-                      ? "bg-primary text-primary-foreground rounded-br-md"
-                      : "bg-muted text-foreground rounded-bl-md"
-                  }`}
+                  key={message.id}
+                  className={`flex ${message.sender_id === user?.id ? "justify-end" : "justify-start"}`}
                 >
-                  <p className="text-sm leading-relaxed">{message.body}</p>
-                  <p
-                    className={`mt-1 text-xs ${
-                      message.senderId === "me"
-                        ? "text-primary-foreground/70"
-                        : "text-muted-foreground"
+                  <div
+                    className={`max-w-[75%] rounded-2xl px-4 py-3 ${
+                      message.sender_id === user?.id
+                        ? "bg-primary text-primary-foreground rounded-br-md"
+                        : "bg-muted text-foreground rounded-bl-md"
                     }`}
                   >
-                    {message.timestamp}
-                  </p>
+                    <p className="text-sm leading-relaxed">{message.body}</p>
+                    <p
+                      className={`mt-1 text-xs ${
+                        message.sender_id === user?.id
+                          ? "text-primary-foreground/70"
+                          : "text-muted-foreground"
+                      }`}
+                    >
+                      {formatMessageTime(message.created_at)}
+                    </p>
+                  </div>
                 </div>
+              ))
+            ) : (
+              <div className="flex items-center justify-center py-12">
+                <p className="text-muted-foreground">Start het gesprek...</p>
               </div>
-            ))}
+            )}
             <div ref={messagesEndRef} />
           </div>
         </div>
@@ -162,8 +173,15 @@ const MessageThread = () => {
                 className="flex-1"
                 maxLength={5000}
               />
-              <Button onClick={handleSend} disabled={!newMessage.trim()}>
-                <Send className="h-4 w-4" />
+              <Button 
+                onClick={handleSend} 
+                disabled={!newMessage.trim() || sendMessage.isPending}
+              >
+                {sendMessage.isPending ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Send className="h-4 w-4" />
+                )}
               </Button>
             </div>
             {error && (
