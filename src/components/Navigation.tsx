@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { 
@@ -14,6 +14,7 @@ import {
   Settings
 } from "lucide-react";
 import { useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
 
 interface NavItem {
   label: string;
@@ -35,7 +36,14 @@ interface NavigationProps {
 
 export function Navigation({ isLoggedIn = false, isAdmin = false }: NavigationProps) {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { signOut } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/");
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-card/80 backdrop-blur-md">
@@ -96,7 +104,7 @@ export function Navigation({ isLoggedIn = false, isAdmin = false }: NavigationPr
                   <User className="h-5 w-5" />
                 </Button>
               </Link>
-              <Button variant="ghost" size="icon" className="text-muted-foreground">
+              <Button variant="ghost" size="icon" className="text-muted-foreground" onClick={handleSignOut}>
                 <LogOut className="h-5 w-5" />
               </Button>
             </>
@@ -174,7 +182,10 @@ export function Navigation({ isLoggedIn = false, isAdmin = false }: NavigationPr
                     Admin
                   </Link>
                 )}
-                <button className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground">
+                <button 
+                  onClick={handleSignOut}
+                  className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
+                >
                   <LogOut className="h-4 w-4" />
                   Uitloggen
                 </button>
