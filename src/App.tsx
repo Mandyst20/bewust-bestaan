@@ -22,8 +22,8 @@ import Profile from "./pages/Profile";
 import UserProfile from "./pages/UserProfile";
 import Admin from "./pages/Admin";
 import Guidelines from "./pages/Guidelines";
+import NewTopic from "./pages/NewTopic";
 import NotFound from "./pages/NotFound";
-
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -41,6 +41,7 @@ const App = () => (
             
             {/* Protected routes */}
             <Route path="/community" element={<ProtectedRoute><Community /></ProtectedRoute>} />
+            <Route path="/community/nieuw-topic" element={<ProtectedRoute><NewTopic /></ProtectedRoute>} />
             <Route path="/community/category/:slug" element={<ProtectedRoute><CategoryPage /></ProtectedRoute>} />
             <Route path="/community/topic/:id" element={<ProtectedRoute><TopicPage /></ProtectedRoute>} />
             <Route path="/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
