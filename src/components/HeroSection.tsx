@@ -62,17 +62,41 @@ export const HeroSection = () => {
             </span>
           </div>
           
-          {/* Main headline */}
-          <h1 
-            className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-light leading-[1.2] tracking-tight text-white opacity-0 animate-fade-in"
+          {/* Main headline - Elegant Quote */}
+          <div 
+            className="relative opacity-0 animate-fade-in"
             style={{ animationDelay: '0.5s', animationFillMode: 'forwards' }}
           >
-            God grant me the <span className="italic font-normal">serenity</span> to accept the things I cannot change,
-            <br />
-            the <span className="italic font-normal">courage</span> to change the things I can,
-            <br />
-            and the <span className="italic font-normal">wisdom</span> to know the difference.
-          </h1>
+            {/* Decorative quote mark */}
+            <span className="absolute -top-8 -left-4 text-7xl sm:text-8xl lg:text-9xl font-serif text-white/10 select-none leading-none">
+              "
+            </span>
+            
+            <h1 className="relative text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-display leading-[1.4] tracking-wide text-white/95">
+              <span className="block mb-2">
+                God grant me the{' '}
+                <span className="italic text-[#e8d4b8] font-medium">serenity</span>
+              </span>
+              <span className="block text-white/80 text-xl sm:text-2xl lg:text-3xl xl:text-4xl pl-4 sm:pl-8 mb-2">
+                to accept the things I cannot change,
+              </span>
+              <span className="block mb-2">
+                the{' '}
+                <span className="italic text-[#e8d4b8] font-medium">courage</span>
+                {' '}to change the things I can,
+              </span>
+              <span className="block text-white/80 text-xl sm:text-2xl lg:text-3xl xl:text-4xl pl-4 sm:pl-8 mb-2">
+                and the{' '}
+                <span className="italic text-[#e8d4b8] font-medium">wisdom</span>
+              </span>
+              <span className="block text-white/70 text-lg sm:text-xl lg:text-2xl xl:text-3xl pl-8 sm:pl-16">
+                to know the difference.
+              </span>
+            </h1>
+            
+            {/* Decorative line */}
+            <div className="mt-6 w-24 h-px bg-gradient-to-r from-[#e8d4b8]/60 via-[#e8d4b8]/30 to-transparent" />
+          </div>
           
           {/* Subheadline */}
           <p 
@@ -116,15 +140,6 @@ export const HeroSection = () => {
         >
           {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5 ml-0.5" />}
         </button>
-
-        {/* Scroll indicator */}
-        <div 
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 opacity-0 animate-fade-in"
-          style={{ animationDelay: '1.2s', animationFillMode: 'forwards' }}
-        >
-          <span className="text-xs tracking-[0.2em] uppercase text-white/40">Scroll</span>
-          <div className="w-px h-16 bg-gradient-to-b from-white/40 to-transparent" />
-        </div>
       </div>
 
       {/* Bottom gradient fade */}
