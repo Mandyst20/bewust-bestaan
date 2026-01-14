@@ -23,6 +23,8 @@ import UserProfile from "./pages/UserProfile";
 import Admin from "./pages/Admin";
 import Guidelines from "./pages/Guidelines";
 import NewTopic from "./pages/NewTopic";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
@@ -37,6 +39,8 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/richtlijnen" element={<Guidelines />} />
             
             {/* Protected routes */}

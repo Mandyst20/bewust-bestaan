@@ -133,6 +133,14 @@ const Login = () => {
                   {errors.password && (
                     <p className="text-sm text-destructive">{errors.password}</p>
                   )}
+                  <div className="flex justify-end">
+                    <Link
+                      to="/forgot-password"
+                      className="text-sm text-primary hover:underline"
+                    >
+                      Wachtwoord vergeten?
+                    </Link>
+                  </div>
                 </div>
 
                 <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
