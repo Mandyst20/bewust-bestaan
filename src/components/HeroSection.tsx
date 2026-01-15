@@ -1,40 +1,19 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Play, Pause } from "lucide-react";
-import { useState, useRef } from "react";
+import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import heroBanner from "@/assets/banner-bewust-bestaan.jpg";
 
 export const HeroSection = () => {
-  const [isPlaying, setIsPlaying] = useState(true);
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  const toggleVideo = () => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause();
-      } else {
-        videoRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
-    }
-  };
 
   return (
     <section className="relative min-h-screen overflow-hidden">
-      {/* Video Background */}
+      {/* Image Background */}
       <div className="absolute inset-0">
-        <video
-          ref={videoRef}
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="w-full h-full object-cover sepia-[0.3] saturate-[0.8] brightness-[0.9]"
-        >
-          <source
-            src="/videos/hero-video-stilte.mp4"
-            type="video/mp4"
-          />
-        </video>
+        <img
+          src={heroBanner}
+          alt="Bewust Bestaan - Meditatieve setting"
+          className="w-full h-full object-cover"
+        />
         
         {/* Warm beige/sand color overlay */}
         <div className="absolute inset-0 bg-[#c4a77d]/30 mix-blend-overlay" />
@@ -132,14 +111,6 @@ export const HeroSection = () => {
           </div>
         </div>
 
-        {/* Video control button */}
-        <button
-          onClick={toggleVideo}
-          className="absolute bottom-10 right-10 w-14 h-14 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white/80 hover:bg-white/20 hover:text-white transition-all duration-300"
-          aria-label={isPlaying ? "Pauzeer video" : "Speel video"}
-        >
-          {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5 ml-0.5" />}
-        </button>
       </div>
 
       {/* Bottom gradient fade */}
