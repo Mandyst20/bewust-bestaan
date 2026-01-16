@@ -21,7 +21,7 @@ export const Header = () => {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3">
-            <img src={logo} alt="BewustBestaan logo" className="h-10 w-10" />
+            <img src={logo} alt="BewustBestaan logo" className="h-14 w-14" />
             <span className="text-xl font-semibold text-foreground">
               Bewust<span className="text-primary">Bestaan</span>
             </span>
