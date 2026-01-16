@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Search } from "lucide-react";
 import { Link } from "react-router-dom";
+import logo from "@/assets/logo-bewustbestaan.png";
 
 export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -19,10 +20,8 @@ export const Header = () => {
       <nav className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-              <span className="text-primary font-semibold text-lg">B</span>
-            </div>
+          <Link to="/" className="flex items-center gap-3">
+            <img src={logo} alt="BewustBestaan logo" className="h-10 w-10" />
             <span className="text-xl font-semibold text-foreground">
               Bewust<span className="text-primary">Bestaan</span>
             </span>
