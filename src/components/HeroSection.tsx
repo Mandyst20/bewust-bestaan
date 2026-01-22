@@ -78,19 +78,19 @@ export const HeroSection = () => {
                 <span className="italic text-[#e8d4b8] font-medium">kalmte</span>
               </span>
               <span className="block text-white/80 text-xl sm:text-2xl lg:text-3xl xl:text-4xl pl-4 sm:pl-8 mb-2">
-                om te accepteren wat komt,
+                om te <span className="italic text-[#e8d4b8] font-medium">accepteren</span> wat komt,
               </span>
               <span className="block mb-2">
                 de{' '}
                 <span className="italic text-[#e8d4b8] font-medium">kracht</span>
-                {' '}om te veranderen wat nodig is,
+                {' '}om te <span className="italic text-[#e8d4b8] font-medium">veranderen</span> wat <span className="italic text-[#e8d4b8] font-medium">nodig</span> is,
               </span>
               <span className="block text-white/80 text-xl sm:text-2xl lg:text-3xl xl:text-4xl pl-4 sm:pl-8 mb-2">
                 en de{' '}
                 <span className="italic text-[#e8d4b8] font-medium">wijsheid</span>
               </span>
               <span className="block text-white/70 text-lg sm:text-xl lg:text-2xl xl:text-3xl pl-8 sm:pl-16">
-                om het verschil te zien.
+                om het <span className="italic text-[#e8d4b8] font-medium">verschil</span> te <span className="italic text-[#e8d4b8] font-medium">zien</span>.
               </span>
             </h1>
             
