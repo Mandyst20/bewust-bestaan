@@ -1,17 +1,20 @@
 import { Navigation } from "./Navigation";
 import { Footer } from "./Footer";
+import { AIChatWidget } from "./AIChatWidget";
 import { useAuth } from "@/hooks/useAuth";
 
 interface LayoutProps {
   children: React.ReactNode;
   showNav?: boolean;
   showFooter?: boolean;
+  showAIChat?: boolean;
 }
 
 export function Layout({ 
   children, 
   showNav = true, 
   showFooter = true,
+  showAIChat = true,
 }: LayoutProps) {
   const { user, isAdmin } = useAuth();
   const isLoggedIn = !!user;
@@ -21,6 +24,7 @@ export function Layout({
       {showNav && <Navigation isLoggedIn={isLoggedIn} isAdmin={isAdmin} />}
       <main className="flex-1">{children}</main>
       {showFooter && <Footer />}
+      {showAIChat && isLoggedIn && <AIChatWidget context="mindfulness" />}
     </div>
   );
 }
