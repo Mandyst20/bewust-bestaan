@@ -1,1 +1,10 @@
 project_id = "blinlixfxdwcmpbhzxdg"
+
+[functions.ai-chat]
+verify_jwt = false
+
+[functions.content-moderation]
+verify_jwt = false
+
+[functions.text-analysis]
+verify_jwt = false
