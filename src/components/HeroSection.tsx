@@ -74,23 +74,23 @@ export const HeroSection = () => {
             
             <h1 className="relative text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-display leading-[1.4] tracking-wide text-white/95">
               <span className="block mb-2">
-                God grant me the{' '}
-                <span className="italic text-[#e8d4b8] font-medium">serenity</span>
+                Geef mij de{' '}
+                <span className="italic text-[#e8d4b8] font-medium">kalmte</span>
               </span>
               <span className="block text-white/80 text-xl sm:text-2xl lg:text-3xl xl:text-4xl pl-4 sm:pl-8 mb-2">
-                to accept the things I cannot change,
+                om te accepteren wat komt,
               </span>
               <span className="block mb-2">
-                the{' '}
-                <span className="italic text-[#e8d4b8] font-medium">courage</span>
-                {' '}to change the things I can,
+                de{' '}
+                <span className="italic text-[#e8d4b8] font-medium">kracht</span>
+                {' '}om te veranderen wat nodig is,
               </span>
               <span className="block text-white/80 text-xl sm:text-2xl lg:text-3xl xl:text-4xl pl-4 sm:pl-8 mb-2">
-                and the{' '}
-                <span className="italic text-[#e8d4b8] font-medium">wisdom</span>
+                en de{' '}
+                <span className="italic text-[#e8d4b8] font-medium">wijsheid</span>
               </span>
               <span className="block text-white/70 text-lg sm:text-xl lg:text-2xl xl:text-3xl pl-8 sm:pl-16">
-                to know the difference.
+                om het verschil te zien.
               </span>
             </h1>
             
