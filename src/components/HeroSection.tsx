@@ -31,7 +31,7 @@ export const HeroSection = () => {
           className="w-full h-full object-cover sepia-[0.3] saturate-[0.8] brightness-[0.9]"
         >
           <source
-            src="/videos/hero-video-stilte.mp4"
+            src="/videos/hero-video-hart.mp4"
             type="video/mp4"
           />
         </video>
