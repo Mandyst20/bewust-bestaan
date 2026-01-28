@@ -21,14 +21,20 @@ export const HeroSection = () => {
   return (
     <section className="relative min-h-screen overflow-hidden">
       {/* Video Background */}
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 flex items-center justify-center">
         <video
           ref={videoRef}
           autoPlay
           muted
           loop
           playsInline
-          className="w-full h-full object-cover sepia-[0.3] saturate-[0.8] brightness-[0.9]"
+          className="w-full h-auto min-h-full object-contain sepia-[0.3] saturate-[0.8] brightness-[0.9]"
+          style={{ 
+            width: '100%',
+            minWidth: '100%',
+            objectFit: 'cover',
+            objectPosition: 'center center'
+          }}
         >
           <source
             src="/videos/hero-video-hart.mp4"
