@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Heart, Lock, Eye, EyeOff, CheckCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { passwordSchema } from "@/lib/validations";
 
 const ResetPassword = () => {
   const [password, setPassword] = useState("");
@@ -39,9 +40,10 @@ const ResetPassword = () => {
     e.preventDefault();
     setErrors({});
 
-    // Validation
-    if (password.length < 6) {
-      setErrors({ password: "Wachtwoord moet minimaal 6 tekens bevatten" });
+    // Validation using consistent password schema
+    const passwordResult = passwordSchema.safeParse(password);
+    if (!passwordResult.success) {
+      setErrors({ password: passwordResult.error.errors[0]?.message || "Ongeldig wachtwoord" });
       return;
     }
 
