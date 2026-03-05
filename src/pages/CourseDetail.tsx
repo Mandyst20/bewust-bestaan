@@ -325,6 +325,7 @@ const CourseDetail = () => {
                       )}
                     </div>
                   </ContentCard>
+                  </div>
                 );
               })}
             </div>
