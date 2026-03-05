@@ -79,6 +79,11 @@ const Admin = () => {
             <Input placeholder="Zoek op gebruikersnaam of e-mail..." className="pl-10" />
           </div>
         </div>
+
+        {/* Cursussen */}
+        <div className="mt-12">
+          <AdminCourses />
+        </div>
       </div>
     </Layout>
   );
