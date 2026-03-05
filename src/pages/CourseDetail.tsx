@@ -276,18 +276,20 @@ const CourseDetail = () => {
                   mod.video_url || mod.audio_url || mod.content_text || mod.download_url;
 
                 return (
-                  <ContentCard
+                  <div
                     key={mod.id}
-                    className={`flex items-center justify-between ${
-                      enrollment && available
-                        ? "cursor-pointer hover:shadow-sm"
-                        : "opacity-60"
-                    }`}
                     onClick={() => {
                       if (enrollment && available && hasContent) {
                         setActiveModuleId(mod.id);
                       }
                     }}
+                  >
+                  <ContentCard
+                    className={`flex items-center justify-between ${
+                      enrollment && available
+                        ? "cursor-pointer hover:shadow-sm"
+                        : "opacity-60"
+                    }`}
                   >
                     <div className="flex items-center gap-4">
                       <div
