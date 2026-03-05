@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Users, MessageSquare, AlertTriangle, Search } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { AdminCourses } from "@/components/AdminCourses";
 
 const Admin = () => {
   return (
