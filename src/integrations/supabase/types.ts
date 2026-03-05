@@ -65,6 +65,121 @@ export type Database = {
         }
         Relationships: []
       }
+      course_enrollments: {
+        Row: {
+          course_id: string
+          enrolled_at: string | null
+          id: string
+          user_id: string
+        }
+        Insert: {
+          course_id: string
+          enrolled_at?: string | null
+          id?: string
+          user_id: string
+        }
+        Update: {
+          course_id?: string
+          enrolled_at?: string | null
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_enrollments_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      course_modules: {
+        Row: {
+          audio_url: string | null
+          content_text: string | null
+          course_id: string
+          created_at: string | null
+          description: string | null
+          download_url: string | null
+          id: string
+          sort_order: number
+          title: string
+          video_url: string | null
+        }
+        Insert: {
+          audio_url?: string | null
+          content_text?: string | null
+          course_id: string
+          created_at?: string | null
+          description?: string | null
+          download_url?: string | null
+          id?: string
+          sort_order?: number
+          title: string
+          video_url?: string | null
+        }
+        Update: {
+          audio_url?: string | null
+          content_text?: string | null
+          course_id?: string
+          created_at?: string | null
+          description?: string | null
+          download_url?: string | null
+          id?: string
+          sort_order?: number
+          title?: string
+          video_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_modules_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      courses: {
+        Row: {
+          cover_url: string | null
+          created_at: string | null
+          description: string | null
+          drip_interval_days: number | null
+          id: string
+          price_cents: number | null
+          published: boolean | null
+          slug: string
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          cover_url?: string | null
+          created_at?: string | null
+          description?: string | null
+          drip_interval_days?: number | null
+          id?: string
+          price_cents?: number | null
+          published?: boolean | null
+          slug: string
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          cover_url?: string | null
+          created_at?: string | null
+          description?: string | null
+          drip_interval_days?: number | null
+          id?: string
+          price_cents?: number | null
+          published?: boolean | null
+          slug?: string
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       dm_messages: {
         Row: {
           body: string

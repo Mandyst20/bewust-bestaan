@@ -18,6 +18,8 @@ import BlogDetail from "./pages/BlogDetail";
 import Exercises from "./pages/Exercises";
 import ExerciseDetail from "./pages/ExerciseDetail";
 import Course from "./pages/Course";
+import Courses from "./pages/Courses";
+import CourseDetail from "./pages/CourseDetail";
 import Profile from "./pages/Profile";
 import UserProfile from "./pages/UserProfile";
 import Admin from "./pages/Admin";
@@ -55,6 +57,8 @@ const App = () => (
             <Route path="/oefeningen" element={<ProtectedRoute><Exercises /></ProtectedRoute>} />
             <Route path="/oefeningen/:slug" element={<ProtectedRoute><ExerciseDetail /></ProtectedRoute>} />
             <Route path="/cursus" element={<ProtectedRoute><Course /></ProtectedRoute>} />
+            <Route path="/cursussen" element={<ProtectedRoute><Courses /></ProtectedRoute>} />
+            <Route path="/cursussen/:slug" element={<ProtectedRoute><CourseDetail /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route path="/u/:username" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
             
