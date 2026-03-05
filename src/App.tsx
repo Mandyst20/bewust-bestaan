@@ -18,6 +18,8 @@ import BlogDetail from "./pages/BlogDetail";
 import Exercises from "./pages/Exercises";
 import ExerciseDetail from "./pages/ExerciseDetail";
 import Course from "./pages/Course";
+import Courses from "./pages/Courses";
+import CourseDetail from "./pages/CourseDetail";
 import Profile from "./pages/Profile";
 import UserProfile from "./pages/UserProfile";
 import Admin from "./pages/Admin";
