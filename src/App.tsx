@@ -64,8 +64,12 @@ const App = () => (
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route path="/u/:username" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
             
-            {/* Admin only route */}
+            {/* Admin only routes */}
             <Route path="/admin" element={<ProtectedRoute requireAdmin><Admin /></ProtectedRoute>} />
+            <Route path="/admin/editor/:slug" element={<ProtectedRoute requireAdmin><PageEditor /></ProtectedRoute>} />
+            
+            {/* Public site pages */}
+            <Route path="/p/:slug" element={<SitePage />} />
             
             <Route path="*" element={<NotFound />} />
           </Routes>

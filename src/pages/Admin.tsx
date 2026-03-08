@@ -81,6 +81,11 @@ const Admin = () => {
           </div>
         </div>
 
+        {/* Website Pagina's */}
+        <div className="mt-12">
+          <AdminPages />
+        </div>
+
         {/* Cursussen */}
         <div className="mt-12">
           <AdminCourses />
