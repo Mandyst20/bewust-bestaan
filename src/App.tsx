@@ -26,6 +26,12 @@ import NewTopic from "./pages/NewTopic";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
+import DropshippingDashboard from "./pages/dropshipping/Dashboard";
+import Suppliers from "./pages/dropshipping/Suppliers";
+import StoreDesign from "./pages/dropshipping/StoreDesign";
+import AdCampaigns from "./pages/dropshipping/AdCampaigns";
+import SeoContent from "./pages/dropshipping/SeoContent";
+import Analytics from "./pages/dropshipping/Analytics";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -58,6 +64,14 @@ const App = () => (
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route path="/u/:username" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
             
+            {/* Dropshipping Blueprint routes */}
+            <Route path="/dropshipping" element={<DropshippingDashboard />} />
+            <Route path="/dropshipping/leveranciers" element={<Suppliers />} />
+            <Route path="/dropshipping/store" element={<StoreDesign />} />
+            <Route path="/dropshipping/campagnes" element={<AdCampaigns />} />
+            <Route path="/dropshipping/seo" element={<SeoContent />} />
+            <Route path="/dropshipping/analytics" element={<Analytics />} />
+
             {/* Admin only route */}
             <Route path="/admin" element={<ProtectedRoute requireAdmin><Admin /></ProtectedRoute>} />
             
