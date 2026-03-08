@@ -28,6 +28,8 @@ import NewTopic from "./pages/NewTopic";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
+import PageEditor from "./pages/PageEditor";
+import SitePage from "./pages/SitePage";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -62,8 +64,12 @@ const App = () => (
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route path="/u/:username" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
             
-            {/* Admin only route */}
+            {/* Admin only routes */}
             <Route path="/admin" element={<ProtectedRoute requireAdmin><Admin /></ProtectedRoute>} />
+            <Route path="/admin/editor/:slug" element={<ProtectedRoute requireAdmin><PageEditor /></ProtectedRoute>} />
+            
+            {/* Public site pages */}
+            <Route path="/p/:slug" element={<SitePage />} />
             
             <Route path="*" element={<NotFound />} />
           </Routes>

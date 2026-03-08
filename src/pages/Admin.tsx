@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Users, MessageSquare, AlertTriangle, Search } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { AdminCourses } from "@/components/AdminCourses";
+import { AdminPages } from "@/components/AdminPages";
 
 const Admin = () => {
   return (
@@ -78,6 +79,11 @@ const Admin = () => {
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input placeholder="Zoek op gebruikersnaam of e-mail..." className="pl-10" />
           </div>
+        </div>
+
+        {/* Website Pagina's */}
+        <div className="mt-12">
+          <AdminPages />
         </div>
 
         {/* Cursussen */}

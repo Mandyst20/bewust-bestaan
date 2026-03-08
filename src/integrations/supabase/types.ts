@@ -266,6 +266,35 @@ export type Database = {
         }
         Relationships: []
       }
+      page_versions: {
+        Row: {
+          blocks: Json
+          created_at: string | null
+          id: string
+          page_id: string
+        }
+        Insert: {
+          blocks: Json
+          created_at?: string | null
+          id?: string
+          page_id: string
+        }
+        Update: {
+          blocks?: Json
+          created_at?: string | null
+          id?: string
+          page_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "page_versions_page_id_fkey"
+            columns: ["page_id"]
+            isOneToOne: false
+            referencedRelation: "site_pages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           allow_dm: boolean | null
@@ -326,6 +355,45 @@ export type Database = {
           resolved_by?: string | null
           risk_level?: Database["public"]["Enums"]["risk_level"]
           type?: string
+        }
+        Relationships: []
+      }
+      site_pages: {
+        Row: {
+          blocks: Json
+          created_at: string | null
+          draft_blocks: Json | null
+          id: string
+          published: boolean
+          seo_description: string | null
+          seo_title: string | null
+          slug: string
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          blocks?: Json
+          created_at?: string | null
+          draft_blocks?: Json | null
+          id?: string
+          published?: boolean
+          seo_description?: string | null
+          seo_title?: string | null
+          slug: string
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          blocks?: Json
+          created_at?: string | null
+          draft_blocks?: Json | null
+          id?: string
+          published?: boolean
+          seo_description?: string | null
+          seo_title?: string | null
+          slug?: string
+          title?: string
+          updated_at?: string | null
         }
         Relationships: []
       }
