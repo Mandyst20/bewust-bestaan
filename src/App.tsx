@@ -28,6 +28,8 @@ import NewTopic from "./pages/NewTopic";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
+import PageEditor from "./pages/PageEditor";
+import SitePage from "./pages/SitePage";
 const queryClient = new QueryClient();
 
 const App = () => (
