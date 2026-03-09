@@ -27,6 +27,34 @@ const blockIcons: Record<BlockType, React.ReactNode> = {
   spacer: <ArrowUpDown className="h-5 w-5" />,
 };
 
+/** Starter blocks for new pages so the canvas is never empty */
+function createStarterBlocks(): PageBlock[] {
+  return [
+    {
+      id: crypto.randomUUID(),
+      type: "hero",
+      data: { ...defaultBlockData.hero },
+    },
+    {
+      id: crypto.randomUUID(),
+      type: "text",
+      data: {
+        ...defaultBlockData.text,
+        content:
+          "Welkom op je nieuwe pagina. Klik op een sectie om deze te bewerken. Pas teksten, kleuren en afbeeldingen aan in het paneel rechts.",
+        alignment: "center" as const,
+        fontSize: "lg" as const,
+        maxWidth: "lg" as const,
+      },
+    },
+    {
+      id: crypto.randomUUID(),
+      type: "cta",
+      data: { ...defaultBlockData.cta },
+    },
+  ];
+}
+
 export default function PageEditor() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
@@ -56,6 +84,9 @@ export default function PageEditor() {
   useEffect(() => {
     async function loadPage() {
       if (!slug || slug === "nieuw") {
+        // Pre-populate new pages with starter blocks
+        setBlocks(createStarterBlocks());
+        setTitle("Nieuwe pagina");
         setLoading(false);
         return;
       }
@@ -70,7 +101,7 @@ export default function PageEditor() {
         setTitle(data.title);
         setPageSlug(data.slug);
         const loadedBlocks = (data.draft_blocks || data.blocks) as unknown as PageBlock[];
-        setBlocks(Array.isArray(loadedBlocks) ? loadedBlocks : []);
+        setBlocks(Array.isArray(loadedBlocks) && loadedBlocks.length > 0 ? loadedBlocks : createStarterBlocks());
         setIsPublished(data.published);
         setSeoTitle(data.seo_title || "");
         setSeoDescription(data.seo_description || "");
@@ -169,10 +200,8 @@ export default function PageEditor() {
       if (shouldPublish) {
         pageData.blocks = blocks as any;
       }
-      // no-op
 
       if (pageId) {
-        // Save version before updating
         const { data: currentPage } = await supabase
           .from("site_pages")
           .select("blocks")
@@ -251,13 +280,9 @@ export default function PageEditor() {
           </Button>
         </div>
         <div>
-          {blocks.length === 0 ? (
-            <div className="flex items-center justify-center py-32 text-muted-foreground">
-              <p>Geen blokken om weer te geven</p>
-            </div>
-          ) : (
-            blocks.map((block) => <BlockRenderer key={block.id} block={block} />)
-          )}
+          {blocks.map((block) => (
+            <BlockRenderer key={block.id} block={block} />
+          ))}
         </div>
       </div>
     );
@@ -306,66 +331,44 @@ export default function PageEditor() {
       </div>
 
       <div className="flex flex-1 overflow-hidden">
-        {/* ─── Live canvas ─── */}
+        {/* ─── Live canvas — renders blocks full-width like the real site ─── */}
         <div
-          className="flex-1 overflow-y-auto"
+          className="flex-1 overflow-y-auto bg-background"
           onClick={(e) => {
             if (e.target === e.currentTarget) setSelectedBlockId(null);
           }}
         >
-          <div className="mx-auto max-w-5xl py-4 px-4">
-            <div className="rounded-xl border border-border bg-background shadow-lg overflow-hidden min-h-[60vh]">
-              {blocks.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-32 text-muted-foreground">
-                  <LayoutTemplate className="mb-4 h-16 w-16 opacity-20" />
-                  <p className="text-lg font-medium">Begin met bouwen</p>
-                  <p className="mt-1 text-sm opacity-70">Klik hieronder om je eerste blok toe te voegen</p>
-                  <Button
-                    variant="outline"
-                    className="mt-6 gap-2"
-                    onClick={() => setShowAddBlock(true)}
-                  >
-                    <Plus className="h-4 w-4" />
-                    Blok toevoegen
-                  </Button>
-                </div>
-              ) : (
-                <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                  <SortableContext items={blocks.map((b) => b.id)} strategy={verticalListSortingStrategy}>
-                    {blocks.map((block, index) => (
-                      <SortableBlock
-                        key={block.id}
-                        block={block}
-                        isSelected={block.id === selectedBlockId}
-                        onSelect={() => {
-                          setSelectedBlockId(block.id);
-                          setActiveTab("properties");
-                        }}
-                        onDelete={() => deleteBlock(block.id)}
-                        onDuplicate={() => duplicateBlock(block.id)}
-                        onMoveUp={index > 0 ? () => moveBlock(block.id, "up") : undefined}
-                        onMoveDown={index < blocks.length - 1 ? () => moveBlock(block.id, "down") : undefined}
-                      />
-                    ))}
-                  </SortableContext>
-                </DndContext>
-              )}
+          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+            <SortableContext items={blocks.map((b) => b.id)} strategy={verticalListSortingStrategy}>
+              {blocks.map((block, index) => (
+                <SortableBlock
+                  key={block.id}
+                  block={block}
+                  isSelected={block.id === selectedBlockId}
+                  onSelect={() => {
+                    setSelectedBlockId(block.id);
+                    setActiveTab("properties");
+                  }}
+                  onDelete={() => deleteBlock(block.id)}
+                  onDuplicate={() => duplicateBlock(block.id)}
+                  onMoveUp={index > 0 ? () => moveBlock(block.id, "up") : undefined}
+                  onMoveDown={index < blocks.length - 1 ? () => moveBlock(block.id, "down") : undefined}
+                />
+              ))}
+            </SortableContext>
+          </DndContext>
 
-              {/* Add block between/after */}
-              {blocks.length > 0 && (
-                <div className="flex justify-center py-6 border-t border-dashed border-border/50">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="gap-1.5 text-xs"
-                    onClick={() => setShowAddBlock(true)}
-                  >
-                    <Plus className="h-3.5 w-3.5" />
-                    Blok toevoegen
-                  </Button>
-                </div>
-              )}
-            </div>
+          {/* Add block button at the bottom */}
+          <div className="flex justify-center py-8 border-t border-dashed border-border/40">
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-1.5 text-xs"
+              onClick={() => setShowAddBlock(true)}
+            >
+              <Plus className="h-3.5 w-3.5" />
+              Blok toevoegen
+            </Button>
           </div>
         </div>
 
@@ -386,7 +389,7 @@ export default function PageEditor() {
                   <div className="flex flex-col items-center justify-center py-16 px-6 text-center text-muted-foreground">
                     <MousePointer className="mb-3 h-8 w-8 opacity-30" />
                     <p className="text-sm font-medium">Selecteer een blok</p>
-                    <p className="mt-1 text-xs opacity-70">Klik op een blok in het canvas om de eigenschappen te bewerken</p>
+                    <p className="mt-1 text-xs opacity-70">Klik op een sectie in de pagina om de eigenschappen te bewerken</p>
                   </div>
                 )}
               </TabsContent>
