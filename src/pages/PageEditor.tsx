@@ -195,12 +195,7 @@ export default function PageEditor() {
           }
         }
 
-        // When publishing, also set blocks
-        if (shouldPublish) {
-          await supabase.from("site_pages").update({ ...cleanData, blocks: blocks as any }).eq("id", pageId);
-        } else {
-          await supabase.from("site_pages").update(cleanData).eq("id", pageId);
-        }
+        await supabase.from("site_pages").update(pageData as any).eq("id", pageId);
         loadVersions(pageId);
       } else {
         const { data, error } = await supabase
