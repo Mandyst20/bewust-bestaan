@@ -1,4 +1,4 @@
-export type BlockType = 'hero' | 'text' | 'image' | 'cta' | 'testimonials' | 'spacer';
+export type BlockType = 'hero' | 'text' | 'image' | 'cta' | 'testimonials' | 'spacer' | 'video' | 'faq' | 'pricing';
 
 export interface HeroBlockData {
   title: string;
@@ -58,13 +58,56 @@ export interface SpacerBlockData {
   height: 'sm' | 'md' | 'lg' | 'xl';
 }
 
+export interface VideoBlockData {
+  url: string;
+  title: string;
+  autoplay: boolean;
+  muted: boolean;
+  backgroundColor: string;
+  maxWidth: 'sm' | 'md' | 'lg' | 'xl' | 'full';
+}
+
+export interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+export interface FAQBlockData {
+  title: string;
+  items: FAQItem[];
+  backgroundColor: string;
+  textColor: string;
+  maxWidth: 'sm' | 'md' | 'lg' | 'xl' | 'full';
+}
+
+export interface PricingTier {
+  name: string;
+  price: string;
+  description: string;
+  features: string[];
+  buttonText: string;
+  buttonLink: string;
+  highlighted: boolean;
+}
+
+export interface PricingBlockData {
+  title: string;
+  subtitle: string;
+  tiers: PricingTier[];
+  backgroundColor: string;
+  textColor: string;
+}
+
 export type BlockData =
   | HeroBlockData
   | TextBlockData
   | ImageBlockData
   | CTABlockData
   | TestimonialsBlockData
-  | SpacerBlockData;
+  | SpacerBlockData
+  | VideoBlockData
+  | FAQBlockData
+  | PricingBlockData;
 
 export interface PageBlock {
   id: string;
@@ -122,6 +165,50 @@ export const defaultBlockData: Record<BlockType, BlockData> = {
   spacer: {
     height: 'md',
   } as SpacerBlockData,
+  video: {
+    url: '',
+    title: 'Video',
+    autoplay: false,
+    muted: true,
+    backgroundColor: '',
+    maxWidth: 'lg',
+  } as VideoBlockData,
+  faq: {
+    title: 'Veelgestelde vragen',
+    items: [
+      { question: 'Hoe kan ik lid worden?', answer: 'Je kunt je eenvoudig registreren via de registratiepagina.' },
+      { question: 'Wat kost het lidmaatschap?', answer: 'Bekijk onze prijspagina voor meer informatie.' },
+    ],
+    backgroundColor: '',
+    textColor: '',
+    maxWidth: 'lg',
+  } as FAQBlockData,
+  pricing: {
+    title: 'Kies je plan',
+    subtitle: 'Vind het abonnement dat bij je past',
+    tiers: [
+      {
+        name: 'Basis',
+        price: '€0',
+        description: 'Gratis toegang tot de community',
+        features: ['Community forum', 'Basis oefeningen'],
+        buttonText: 'Start gratis',
+        buttonLink: '/register',
+        highlighted: false,
+      },
+      {
+        name: 'Premium',
+        price: '€19/mnd',
+        description: 'Volledige toegang tot alles',
+        features: ['Alle cursussen', 'Persoonlijke begeleiding', 'Downloads', 'Premium community'],
+        buttonText: 'Word Premium',
+        buttonLink: '/register',
+        highlighted: true,
+      },
+    ],
+    backgroundColor: '',
+    textColor: '',
+  } as PricingBlockData,
 };
 
 export const blockLabels: Record<BlockType, string> = {
@@ -131,4 +218,7 @@ export const blockLabels: Record<BlockType, string> = {
   cta: 'Call to Action',
   testimonials: 'Testimonials',
   spacer: 'Ruimte',
+  video: 'Video',
+  faq: 'FAQ',
+  pricing: 'Prijstabel',
 };
