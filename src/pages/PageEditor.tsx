@@ -198,9 +198,10 @@ export default function PageEditor() {
         await supabase.from("site_pages").update(pageData as any).eq("id", pageId);
         loadVersions(pageId);
       } else {
+        const insertData = { ...pageData, blocks: blocks as any };
         const { data, error } = await supabase
           .from("site_pages")
-          .insert({ ...cleanData, blocks: blocks as any })
+          .insert(insertData as any)
           .select()
           .single();
         if (error) throw error;
