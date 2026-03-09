@@ -169,7 +169,7 @@ export default function PageEditor() {
       if (shouldPublish) {
         pageData.blocks = blocks as any;
       }
-      const cleanData = Object.fromEntries(Object.entries(pageData).filter(([_, v]) => v !== undefined));
+      // no-op
 
       if (pageId) {
         // Save version before updating
