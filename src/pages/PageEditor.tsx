@@ -13,7 +13,8 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import {
   Save, Eye, EyeOff, ArrowLeft, Plus, LayoutTemplate, Type, Image,
-  MousePointer, Quote, ArrowUpDown, Undo2, Globe, PanelRightClose, PanelRight, X
+  MousePointer, Quote, ArrowUpDown, Undo2, Globe, PanelRightClose, PanelRight, X,
+  Play, HelpCircle, CreditCard
 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -25,33 +26,26 @@ const blockIcons: Record<BlockType, React.ReactNode> = {
   cta: <MousePointer className="h-5 w-5" />,
   testimonials: <Quote className="h-5 w-5" />,
   spacer: <ArrowUpDown className="h-5 w-5" />,
+  video: <Play className="h-5 w-5" />,
+  faq: <HelpCircle className="h-5 w-5" />,
+  pricing: <CreditCard className="h-5 w-5" />,
 };
 
-/** Starter blocks for new pages so the canvas is never empty */
 function createStarterBlocks(): PageBlock[] {
   return [
-    {
-      id: crypto.randomUUID(),
-      type: "hero",
-      data: { ...defaultBlockData.hero },
-    },
+    { id: crypto.randomUUID(), type: "hero", data: { ...defaultBlockData.hero } },
     {
       id: crypto.randomUUID(),
       type: "text",
       data: {
         ...defaultBlockData.text,
-        content:
-          "Welkom op je nieuwe pagina. Klik op een sectie om deze te bewerken. Pas teksten, kleuren en afbeeldingen aan in het paneel rechts.",
+        content: "Welkom op je nieuwe pagina. Klik op een sectie om deze te bewerken. Pas teksten, kleuren en afbeeldingen aan in het paneel rechts.",
         alignment: "center" as const,
         fontSize: "lg" as const,
         maxWidth: "lg" as const,
       },
     },
-    {
-      id: crypto.randomUUID(),
-      type: "cta",
-      data: { ...defaultBlockData.cta },
-    },
+    { id: crypto.randomUUID(), type: "cta", data: { ...defaultBlockData.cta } },
   ];
 }
 
@@ -84,7 +78,6 @@ export default function PageEditor() {
   useEffect(() => {
     async function loadPage() {
       if (!slug || slug === "nieuw") {
-        // Pre-populate new pages with starter blocks
         setBlocks(createStarterBlocks());
         setTitle("Nieuwe pagina");
         setLoading(false);
@@ -331,7 +324,7 @@ export default function PageEditor() {
       </div>
 
       <div className="flex flex-1 overflow-hidden">
-        {/* ─── Live canvas — renders blocks full-width like the real site ─── */}
+        {/* ─── Live canvas ─── */}
         <div
           className="flex-1 overflow-y-auto bg-background"
           onClick={(e) => {
@@ -358,7 +351,7 @@ export default function PageEditor() {
             </SortableContext>
           </DndContext>
 
-          {/* Add block button at the bottom */}
+          {/* Add block button */}
           <div className="flex justify-center py-8 border-t border-dashed border-border/40">
             <Button
               variant="outline"
@@ -466,7 +459,7 @@ export default function PageEditor() {
       {/* ─── Add block overlay ─── */}
       {showAddBlock && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" onClick={() => setShowAddBlock(false)}>
-          <div className="w-[420px] rounded-2xl border border-border bg-card p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
+          <div className="w-[480px] rounded-2xl border border-border bg-card p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-5">
               <h3 className="text-lg font-semibold text-foreground">Blok toevoegen</h3>
               <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setShowAddBlock(false)}>

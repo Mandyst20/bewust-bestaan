@@ -1,4 +1,5 @@
-import { PageBlock, HeroBlockData, TextBlockData, ImageBlockData, CTABlockData, TestimonialsBlockData, SpacerBlockData } from "@/lib/pageBlockTypes";
+import { PageBlock, HeroBlockData, TextBlockData, ImageBlockData, CTABlockData, TestimonialsBlockData, SpacerBlockData, VideoBlockData, FAQBlockData, PricingBlockData } from "@/lib/pageBlockTypes";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 interface BlockRendererProps {
   block: PageBlock;
@@ -72,7 +73,7 @@ function ImageBlock({ data }: { data: ImageBlockData }) {
     return (
       <section className="px-6 py-8">
         <div className={`mx-auto ${widthClasses[data.width] || 'max-w-3xl'} flex h-48 items-center justify-center rounded-xl border-2 border-dashed border-border bg-muted`}>
-          <p className="text-muted-foreground">Voeg een afbeelding URL toe</p>
+          <p className="text-muted-foreground">Voeg een afbeelding toe</p>
         </div>
       </section>
     );
@@ -99,7 +100,7 @@ function CTABlock({ data }: { data: CTABlockData }) {
       style={{ backgroundColor: data.backgroundColor || undefined, color: data.textColor || undefined }}
     >
       <div className={`mx-auto max-w-4xl ${data.layout === 'side-by-side' ? 'flex flex-col items-center justify-between gap-6 md:flex-row' : 'text-center'}`}>
-        <div className={data.layout === 'side-by-side' ? '' : ''}>
+        <div>
           <h2 className="font-display text-3xl font-bold">{data.title}</h2>
           {data.description && <p className="mt-3 text-lg opacity-90">{data.description}</p>}
         </div>
@@ -147,6 +148,123 @@ function SpacerBlock({ data }: { data: SpacerBlockData }) {
   return <div style={{ height: heightMap[data.height] || '4rem' }} />;
 }
 
+function VideoBlock({ data }: { data: VideoBlockData }) {
+  const maxWidthClasses: Record<string, string> = {
+    sm: 'max-w-sm', md: 'max-w-md', lg: 'max-w-3xl', xl: 'max-w-5xl', full: 'max-w-full',
+  };
+
+  // Parse YouTube/Vimeo embed URLs
+  const getEmbedUrl = (url: string) => {
+    if (!url) return '';
+    const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\s]+)/);
+    if (ytMatch) return `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=${data.autoplay ? 1 : 0}&mute=${data.muted ? 1 : 0}`;
+    const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
+    if (vimeoMatch) return `https://player.vimeo.com/video/${vimeoMatch[1]}?autoplay=${data.autoplay ? 1 : 0}&muted=${data.muted ? 1 : 0}`;
+    return url;
+  };
+
+  const embedUrl = getEmbedUrl(data.url);
+
+  return (
+    <section className="px-6 py-12" style={{ backgroundColor: data.backgroundColor || undefined }}>
+      <div className={`mx-auto ${maxWidthClasses[data.maxWidth] || 'max-w-3xl'}`}>
+        {data.title && <h2 className="mb-6 text-center font-display text-2xl font-bold">{data.title}</h2>}
+        {embedUrl ? (
+          <div className="relative w-full overflow-hidden rounded-2xl" style={{ paddingBottom: '56.25%' }}>
+            <iframe
+              src={embedUrl}
+              className="absolute inset-0 h-full w-full"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              title={data.title || 'Video'}
+            />
+          </div>
+        ) : (
+          <div className="flex h-48 items-center justify-center rounded-2xl border-2 border-dashed border-border bg-muted">
+            <p className="text-muted-foreground">Plak een YouTube of Vimeo URL</p>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function FAQBlock({ data }: { data: FAQBlockData }) {
+  const maxWidthClasses: Record<string, string> = {
+    sm: 'max-w-sm', md: 'max-w-md', lg: 'max-w-3xl', xl: 'max-w-5xl', full: 'max-w-full',
+  };
+
+  return (
+    <section className="px-6 py-16" style={{ backgroundColor: data.backgroundColor || undefined, color: data.textColor || undefined }}>
+      <div className={`mx-auto ${maxWidthClasses[data.maxWidth] || 'max-w-3xl'}`}>
+        {data.title && <h2 className="mb-8 text-center font-display text-3xl font-bold">{data.title}</h2>}
+        <Accordion type="single" collapsible className="w-full">
+          {data.items?.map((item, i) => (
+            <AccordionItem key={i} value={`faq-${i}`} className="border-border/50">
+              <AccordionTrigger className="text-left text-base font-medium hover:no-underline">
+                {item.question}
+              </AccordionTrigger>
+              <AccordionContent className="text-base leading-relaxed opacity-80">
+                {item.answer}
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </div>
+    </section>
+  );
+}
+
+function PricingBlock({ data }: { data: PricingBlockData }) {
+  return (
+    <section className="px-6 py-16" style={{ backgroundColor: data.backgroundColor || undefined, color: data.textColor || undefined }}>
+      <div className="mx-auto max-w-5xl">
+        {data.title && <h2 className="mb-3 text-center font-display text-3xl font-bold">{data.title}</h2>}
+        {data.subtitle && <p className="mb-12 text-center text-lg opacity-80">{data.subtitle}</p>}
+        <div className={`grid gap-6 ${data.tiers.length <= 2 ? 'md:grid-cols-2 max-w-3xl mx-auto' : 'md:grid-cols-3'}`}>
+          {data.tiers?.map((tier, i) => (
+            <div
+              key={i}
+              className={`relative rounded-2xl border p-8 ${
+                tier.highlighted
+                  ? 'border-primary bg-primary/5 shadow-lg ring-2 ring-primary/20'
+                  : 'border-border/50 bg-card/50'
+              }`}
+            >
+              {tier.highlighted && (
+                <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary px-4 py-1 text-xs font-semibold text-primary-foreground">
+                  Populair
+                </span>
+              )}
+              <h3 className="text-xl font-bold">{tier.name}</h3>
+              <p className="mt-2 text-3xl font-bold">{tier.price}</p>
+              <p className="mt-2 text-sm opacity-70">{tier.description}</p>
+              <ul className="mt-6 space-y-3">
+                {tier.features.map((f, fi) => (
+                  <li key={fi} className="flex items-center gap-2 text-sm">
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary/10 text-primary text-xs">✓</span>
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              <a
+                href={tier.buttonLink || '#'}
+                className={`mt-8 block w-full rounded-lg py-3 text-center font-semibold transition-smooth ${
+                  tier.highlighted
+                    ? 'bg-primary text-primary-foreground hover:opacity-90'
+                    : 'border border-border bg-card hover:bg-muted'
+                }`}
+              >
+                {tier.buttonText}
+              </a>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function BlockRenderer({ block }: BlockRendererProps) {
   switch (block.type) {
     case 'hero': return <HeroBlock data={block.data as HeroBlockData} />;
@@ -155,6 +273,9 @@ export function BlockRenderer({ block }: BlockRendererProps) {
     case 'cta': return <CTABlock data={block.data as CTABlockData} />;
     case 'testimonials': return <TestimonialsBlock data={block.data as TestimonialsBlockData} />;
     case 'spacer': return <SpacerBlock data={block.data as SpacerBlockData} />;
+    case 'video': return <VideoBlock data={block.data as VideoBlockData} />;
+    case 'faq': return <FAQBlock data={block.data as FAQBlockData} />;
+    case 'pricing': return <PricingBlock data={block.data as PricingBlockData} />;
     default: return <div className="p-4 text-muted-foreground">Onbekend blok type</div>;
   }
 }
