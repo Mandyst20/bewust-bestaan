@@ -157,18 +157,18 @@ export default function PageEditor() {
     setSaving(true);
     try {
       const shouldPublish = publish !== undefined ? publish : isPublished;
-      const pageData = {
+      const pageData: Record<string, any> = {
         title,
         slug: pageSlug,
-        blocks: shouldPublish ? (blocks as any) : undefined,
         draft_blocks: shouldPublish ? null : (blocks as any),
         published: shouldPublish,
         seo_title: seoTitle || null,
         seo_description: seoDescription || null,
         updated_at: new Date().toISOString(),
       };
-
-      // Remove undefined keys
+      if (shouldPublish) {
+        pageData.blocks = blocks as any;
+      }
       const cleanData = Object.fromEntries(Object.entries(pageData).filter(([_, v]) => v !== undefined));
 
       if (pageId) {
