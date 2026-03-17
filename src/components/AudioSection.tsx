@@ -16,18 +16,18 @@ export const AudioSection = () => {
   ];
 
   return (
-    <section id="audio" className="section-padding">
+    <section id="audio" className="py-24">
       <div className="container mx-auto px-6">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Content */}
           <div className="space-y-8">
             <div>
-              <span className="text-sm font-medium text-primary mb-3 block tracking-wide uppercase">Audio Abonnement</span>
-              <h2 className="heading-3 mb-4">
+              <span className="text-sm font-medium text-primary mb-3 block">Audio Abonnement</span>
+              <h2 className="text-3xl lg:text-4xl font-semibold mb-4 tracking-tight">
                 Exclusieve audio content voor dagelijks bewust leven
               </h2>
               <p className="text-muted-foreground text-lg leading-relaxed">
-                Maandelijks abonnement met nieuwe meditaties, visualisaties en podcasts
+                Maandelijks abonnement met nieuwe meditaties, visualisaties en podcasts 
                 die je helpen bij je persoonlijke groei.
               </p>
             </div>
@@ -35,21 +35,21 @@ export const AudioSection = () => {
             <ul className="space-y-4">
               {features.map((feature, index) => (
                 <li key={index} className="flex items-center gap-3">
-                  <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Check className="h-3.5 w-3.5 text-primary" />
+                  <div className="w-6 h-6 rounded-full bg-secondary flex items-center justify-center">
+                    <Check className="h-3.5 w-3.5 text-secondary-foreground" />
                   </div>
                   <span className="text-foreground">{feature}</span>
                 </li>
               ))}
             </ul>
 
-            <div className="bg-card rounded-2xl p-6 inline-block shadow-soft border border-border/50">
+            <div className="glass-card rounded-2xl p-6 inline-block">
               <div className="flex items-baseline gap-2 mb-2">
                 <span className="text-3xl font-semibold text-foreground">€12,99</span>
                 <span className="text-muted-foreground">/ maand</span>
               </div>
               <p className="text-sm text-muted-foreground mb-4">Volledige toegang tot alle content</p>
-              <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg">
+              <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl">
                 Start Abonnement
               </Button>
             </div>
@@ -57,8 +57,8 @@ export const AudioSection = () => {
 
           {/* Visual */}
           <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-3xl blur-3xl" />
-            <div className="relative bg-card rounded-3xl p-8 shadow-medium border border-border/50">
+            <div className="absolute inset-0 bg-gradient-sage rounded-4xl blur-2xl opacity-50" />
+            <div className="relative bg-card rounded-4xl p-8 shadow-medium">
               <div className="flex items-center gap-3 mb-8">
                 <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
                   <Headphones className="h-6 w-6 text-primary" />
@@ -73,11 +73,11 @@ export const AudioSection = () => {
                 {audioItems.map((item, index) => (
                   <div
                     key={index}
-                    className={`flex items-center gap-4 p-4 rounded-xl transition-all duration-300 cursor-pointer ${
+                    className={`flex items-center gap-4 p-4 rounded-2xl transition-all duration-300 cursor-pointer ${
                       index === 0 ? 'bg-primary/10' : 'bg-muted/50 hover:bg-muted'
                     }`}
                   >
-                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${
                       index === 0 ? 'bg-primary text-primary-foreground' : 'bg-background'
                     }`}>
                       <Play className="h-4 w-4" />
@@ -98,7 +98,7 @@ export const AudioSection = () => {
                   <span className="text-muted-foreground">3:24 / 10:00</span>
                 </div>
                 <div className="h-2 bg-muted rounded-full overflow-hidden">
-                  <div className="h-full w-1/3 bg-gradient-to-r from-primary to-secondary rounded-full" />
+                  <div className="h-full w-1/3 bg-primary rounded-full" />
                 </div>
               </div>
             </div>

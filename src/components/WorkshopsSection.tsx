@@ -31,15 +31,15 @@ export const WorkshopsSection = () => {
   ];
 
   return (
-    <section id="cursussen" className="section-padding bg-muted/30">
+    <section id="cursussen" className="py-24 bg-gradient-warm">
       <div className="container mx-auto px-6">
         <div className="max-w-2xl mb-16">
-          <span className="text-sm font-medium text-primary mb-3 block tracking-wide uppercase">Cursussen</span>
-          <h2 className="heading-3 mb-4">
+          <span className="text-sm font-medium text-primary mb-3 block">Mini-Workshops</span>
+          <h2 className="text-3xl lg:text-4xl font-semibold mb-4 tracking-tight">
             Transformatie in kleine stappen
           </h2>
           <p className="text-muted-foreground text-lg leading-relaxed">
-            Korte, krachtige workshops die je helpen om concrete veranderingen
+            Korte, krachtige workshops die je helpen om concrete veranderingen 
             door te voeren in je dagelijks leven.
           </p>
         </div>
@@ -48,17 +48,16 @@ export const WorkshopsSection = () => {
           {workshops.map((workshop, index) => (
             <div
               key={index}
-              className={`group bg-card rounded-2xl overflow-hidden shadow-soft card-hover ${
+              className={`group bg-card rounded-3xl overflow-hidden shadow-soft hover:shadow-medium transition-all duration-500 ${
                 workshop.featured ? 'ring-2 ring-primary/20' : ''
               }`}
             >
-              <div className="aspect-[16/10] overflow-hidden relative">
+              <div className="aspect-[16/10] overflow-hidden">
                 <img
                   src={workshop.image}
                   alt={workshop.title}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
               <div className="p-6">
                 {workshop.featured && (
@@ -91,12 +90,12 @@ export const WorkshopsSection = () => {
         </div>
 
         <div className="mt-12 text-center">
-          <Button
-            variant="outline"
+          <Button 
+            variant="outline" 
             size="lg"
-            className="rounded-lg px-8 border-primary/20 hover:bg-primary/5 hover:border-primary/40 text-primary"
+            className="rounded-2xl px-8 border-border/60 hover:bg-muted/50"
           >
-            Bekijk alle cursussen
+            Bekijk alle workshops
             <ArrowRight className="h-4 w-4 ml-2" />
           </Button>
         </div>

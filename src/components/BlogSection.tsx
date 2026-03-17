@@ -28,19 +28,19 @@ export const BlogSection = () => {
   ];
 
   return (
-    <section id="artikelen" className="section-padding bg-muted/30">
+    <section id="artikelen" className="py-24 bg-gradient-warm">
       <div className="container mx-auto px-6">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4">
           <div>
-            <span className="text-sm font-medium text-primary mb-3 block tracking-wide uppercase">Inspiratie</span>
-            <h2 className="heading-3">
+            <span className="text-sm font-medium text-primary mb-3 block">Inspiratie</span>
+            <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight">
               Laatste artikelen
             </h2>
           </div>
-          <Button
+          <Button 
             asChild
-            variant="ghost"
-            className="text-primary hover:text-primary hover:bg-primary/5 rounded-lg self-start sm:self-auto"
+            variant="ghost" 
+            className="text-primary hover:text-primary hover:bg-primary/10 rounded-xl self-start sm:self-auto"
           >
             <Link to="/blogs">
               Alle artikelen
@@ -53,9 +53,9 @@ export const BlogSection = () => {
           {articles.map((article, index) => (
             <article
               key={index}
-              className="group cursor-pointer card-hover"
+              className="group cursor-pointer"
             >
-              <div className="aspect-[16/10] rounded-2xl overflow-hidden mb-5 shadow-soft">
+              <div className="aspect-[16/10] rounded-3xl overflow-hidden mb-5 shadow-soft">
                 <img
                   src={article.image}
                   alt={article.title}
@@ -64,7 +64,7 @@ export const BlogSection = () => {
               </div>
               <div className="space-y-3">
                 <div className="flex items-center gap-3">
-                  <span className="px-3 py-1 text-xs font-medium bg-primary/10 text-primary rounded-full">
+                  <span className="px-3 py-1 text-xs font-medium bg-secondary text-secondary-foreground rounded-full">
                     {article.category}
                   </span>
                   <span className="text-xs text-muted-foreground">{article.date}</span>
